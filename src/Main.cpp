@@ -1,11 +1,11 @@
 #include <telkin/Print.h>
-#include <example/ExampleMod.h>
+#include <sap/Sap.h>
 
-red::Registrar* example::getRegistrar() {
-    static red::Registrar sRegistrar("examplemod");
+red::Registrar* sap::getRegistrar() {
+    static red::Registrar sRegistrar("sap");
     return &sRegistrar;
 }
 
 void main() {
-    tk::println("Welcome to Example Mod");
+    tk::println("Welcome to Swiftshine's Actor Pack!");
 }
