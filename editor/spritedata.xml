@@ -23,7 +23,7 @@
 			<entry value="4">Give the player powerup always</entry>
 		</list>
 
-		<list nybble="22" title="Powerup" category="behavior" comment="Sap only!" requirednybble="21" requiredval="2-3">
+		<list nybble="22" title="Powerup" category="behavior" comment="Sap only!" requirednybble="21" requiredval="2-4">
 			<entry value="0">Small</entry>
 			<entry value="1">Mushroom</entry>
 			<entry value="2">Fire Flower</entry>
