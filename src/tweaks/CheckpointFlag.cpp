@@ -1,4 +1,5 @@
 // TODO: tweak cull threshold to account for rotated models
+// TODO: change position of the point counters (see CheckPointFlag::doCollect() at 0x02728c30)
 
 #include <actor/Actor.h>
 #include <actor/ActorCollision.h>
