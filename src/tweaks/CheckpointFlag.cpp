@@ -1,7 +1,10 @@
-// TODO: effects
+// TODO: tweak cull threshold to account for rotated models
 
 #include <actor/Actor.h>
 #include <actor/ActorCollision.h>
+#include <actor/ActorState.h>
+#include <effect/Effect.h>
+#include <effect/EffectCreateUtil.h>
 #include <player/PlayerObject.h>
 #include <red/util/SpriteUtil.h>
 
@@ -13,15 +16,18 @@
 #include <telkin/Hooks.h>
 
 namespace sap {
-    enum CheckpointBehavior : u32 {
-        Default,
-        NoPowerup,
-        PowerupConditionally,
-        PowerupConditionallyWithOverride,
-        PowerupAlways
-    };
+    const f32 ANGLE_MULTIPLIER_DEG = 11.25f;
 
+    // Checkpoint powerup
     void changePlayerPowerup(Actor* checkpoint, PlayerObject* player) {
+        enum CheckpointBehavior : u32 {
+            Default,
+            NoPowerup,
+            PowerupConditionally,
+            PowerupConditionallyWithOverride,
+            PowerupAlways
+        };
+
         CheckpointBehavior behavior = static_cast<CheckpointBehavior>(red::SpriteUtil::getNybble21(checkpoint));
         PlayerMode powerup = static_cast<PlayerMode>(red::SpriteUtil::getNybble22(checkpoint));
 
@@ -81,6 +87,24 @@ namespace sap {
     tBranch(0x02728F14, sap::changePlayerPowerupHook, tk::BranchType::bl);
     tBranch(0x02728F98, sap::changePlayerPowerupHook, tk::BranchType::bl);
 
+    // Helper methods
+    f32 getCheckpointAngleDeg(Actor* checkpoint) {
+        return ANGLE_MULTIPLIER_DEG * red::SpriteUtil::getNybbleRange(checkpoint, 23, 24);
+    }
+
+    u32 getCheckpointAngleBAM(Actor* checkpoint) {
+        f32 angleDeg = getCheckpointAngleDeg(checkpoint);
+
+        u32 angleBAM;
+        if (angleDeg < 180.0f) {
+            angleBAM = sead::Mathf::deg2idx(angleDeg);
+        } else {
+            angleBAM = (u32)sead::Mathf::deg2idx(angleDeg - 180.0f) + 0x80000000;
+        }
+        return angleBAM;
+    }
+
+    // Checkpoint model angle
     void setModelAngle(Actor* checkpoint) {
         const u32 ORIGINAL_Y_ANGLE = -0x40000000;
         bool flip = static_cast<bool>(red::SpriteUtil::getNybble5(checkpoint));
@@ -92,17 +116,8 @@ namespace sap {
         if (affectedByGravity) {
             return;
         }
-        
-        u8 givenAngle = red::SpriteUtil::getNybbleRange(checkpoint, 23, 24);
-        const f32 ANGLE_DEG = 11.25;
-        f32 angleDeg = ANGLE_DEG * givenAngle;
 
-        u32 angleBAM;
-        if (angleDeg < 180.0f) {
-            angleBAM = sead::Mathf::deg2idx(angleDeg);
-        } else {
-            angleBAM = (u32)sead::Mathf::deg2idx(angleDeg - 180.0f) + 0x80000000;
-        }
+        u32 angleBAM = getCheckpointAngleBAM(checkpoint);
 
         checkpoint->getAngle().z() = angleBAM;
     }
@@ -119,13 +134,10 @@ namespace sap {
 
     tBranch(0x02727F90, sap::changeModelAngleHook, tk::BranchType::bl);
 
+    // Checkpoint collider
     using CC = ActorCollisionCheck;
     void setCheckpointCollision(CC* collider, Actor* checkpoint, const CC::CollisionData& colData) {
-        const f32 ANGLE_DEG = 11.25f;
-        const u8 givenAngle =
-            red::SpriteUtil::getNybbleRange(checkpoint, 23, 24);
-
-        const f32 angleDeg = ANGLE_DEG * givenAngle;
+        const f32 angleDeg = getCheckpointAngleDeg(checkpoint);
         const f32 angleRad = sead::Mathf::deg2rad(angleDeg);
 
         const f32 s = sead::Mathf::sin(angleRad);
@@ -155,5 +167,41 @@ namespace sap {
     }
 
     tBranch(0x02728068, sap::setCheckpointCollision, tk::BranchType::bl);
+
+    // Passive checkpoint event while uncollected
+    void setPassiveCheckpointEffectRotation(ActorState* checkpoint_) {
+        struct Checkpoint : ActorState {
+            u8 stuffWeDontCareAbout[0x130];
+            EffectObj mEffectObj;
+        };
+
+        Checkpoint* checkpoint = static_cast<Checkpoint*>(checkpoint_);
+        f32 angleDeg = getCheckpointAngleDeg(checkpoint);
+
+        Angle3 angle;
+        angle.z() = getCheckpointAngleBAM(checkpoint);
+        checkpoint->mEffectObj.follow(&checkpoint->getPos(), &angle, nullptr);
+    }
+
+    void setPassiveCheckpointEffectRotationHook() tAssembly(
+        tSaveLR;
+
+        mr r3, r31;
+        bl _ZN3sap34setPassiveCheckpointEffectRotationEP10ActorState;
+
+        tRestoreLR;
+        blr;
+    );
+
+    tBranch(0x0272858C, sap::setPassiveCheckpointEffectRotationHook, tk::BranchType::bl);
+
+    // Star effect on player collision
+    void setPlayerCollectCheckpointEffectRotation(Actor* checkpoint) {
+        Angle3 angle;
+        angle.z() = getCheckpointAngleBAM(checkpoint);
+        EffectCreateUtil::createEffect(RP_MiddleFlag_Change, &checkpoint->getPos(), &angle);
+    }
+
+    tBranch(0x02728C78, sap::setPlayerCollectCheckpointEffectRotation, tk::BranchType::bl);
 }
 
