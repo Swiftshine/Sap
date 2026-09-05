@@ -72,4 +72,38 @@
 			<entry value="31">348.75°</entry>
 		</list>
 	</sprite>
+
+	<sprite string_id="sap:peepa" name="Peepa">
+        <list nybble="1" title="Platform Type">
+			<entry value="0">No Platform</entry>
+            <entry value="1">Cloud</entry>
+            <entry value="2">Wood</entry>
+            <entry value="3">Wood Snow</entry>
+			<entry value="4">Ferris Wheel</entry>
+            <entry value="5">Stone</entry>
+            <entry value="6">Bolt Platform</entry>
+        </list>
+
+		<list nybble="2" title="Platform Length" requirednybble="1" requiredval="2-6">
+			<entry value="0"></entry>
+			<entry value="1"></entry>
+			<entry value="2"></entry>
+			<entry value="3"></entry>
+			<entry value="4"></entry>
+		</list>
+        <!-- <list nybble="X" title="Movement Type">
+			<entry value="0">None</entry>
+			<entry value="1">Sway Or Spin (68, 69, 116, 118)</entry>
+			<entry value="2">Bolt (238)</entry>
+			<entry value="3">Path (100)</entry>
+			<entry value="4">Two-Way (70)</entry>
+			<entry value="6">BoltMushroom (241)</entry>
+			<entry value="7">No-bolt Mushroom (242)</entry>
+			<entry value="8">Shifting Platform (132)</entry>
+			<entry value="9">Spinning (214, 484)</entry>
+			<entry value="10">Rolling Hill (265)</entry>
+			<entry value="11">Moving Mushroom Lift (210)</entry>
+		</list>
+        <value nybble="X" title="Movement ID"/> -->
+	</sprite>
 </sprites>

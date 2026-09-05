@@ -4,3 +4,10 @@
 
 _ZN12PlayerObject16setItemGetEffectEv = 0x0293A388;
 _ZN9EffectObj6followEPKN4sead7Vector3IfEEPK6Angle3S4_ = 0x022ab448;
+
+
+_ZN19LiftNormalModelDraw4initEv = 0x027BE110;
+_ZN19LiftNormalModelDraw4moveERKN4sead7Vector3IfEEf = 0x027BE428;
+_ZN19LiftNormalModelDraw4drawEv = 0x027BE4FC;
+
+_ZN19ActorAdditionalHeap7destroyEv = 0x02002C54;
