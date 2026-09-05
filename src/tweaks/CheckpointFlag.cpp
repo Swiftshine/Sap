@@ -51,7 +51,7 @@ namespace sap {
                     break;
                 }
 
-                // intentional fallthrough
+                [[fallthrough]];
             }
 
             case CheckpointBehavior::PowerupConditionallyWithOverride: {
@@ -59,7 +59,7 @@ namespace sap {
                     break;
                 }
 
-                // intentional fallthrough
+                [[fallthrough]];
             }
             
             case CheckpointBehavior::PowerupAlways: {
