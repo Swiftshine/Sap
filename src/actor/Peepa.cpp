@@ -1,4 +1,3 @@
-// TODO: randomise wait animation frame on init
 // TODO: behaviour sans platform
 // NOTE: need to wait until redcore has an official symbol for `linkPivotal`
 
@@ -13,6 +12,7 @@
 #include <graphics/AnimModel.h>
 #include <map_obj/LiftNormalModelDraw.h>
 #include <map_obj/ParentMovementMgr.h>
+#include <random/seadGlobalRandom.h>
 
 namespace sap {
 
@@ -214,6 +214,16 @@ ActorBase::Result Peepa::create() {
     // model setup
     mModel = AnimModel::create("teren", "teren", 3);
     mModel->playSklAnim("Wait");
+
+
+    FrameCtrl& ctrl = mModel->getSklAnim(0)->getFrameCtrl();
+    
+    ctrl.setPlayMode(FrameCtrl::cMode_Repeat);
+    f32 start = ctrl.getFrameStart();
+    f32 end = ctrl.getFrameEnd();
+
+    f32 frame = sead::GlobalRandom::instance()->getF32Range(start, end);
+    ctrl.setFrame(frame);
 
     // platform
     u8 platformSetting = red::SpriteUtil::getNybble1(this);
