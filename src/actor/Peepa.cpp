@@ -1,6 +1,6 @@
 // TODO: randomise wait animation frame on init
 // TODO: behaviour sans platform
-// TODO: movement control (it's currently busted)
+// NOTE: need to wait until redcore has an official symbol for `linkPivotal`
 
 #include <sap/Sap.h>
 #include <red/util/SpriteUtil.h>
@@ -112,7 +112,13 @@ ActorBase::Result Platform::create() {
         mMovementID = static_cast<u8>(red::SpriteUtil::getNybbleRange(this, 7, 8));
         u8 movementType = red::SpriteUtil::getNybble9(this);
         u32 movementMask = mMovementManager.getTypeMask(static_cast<ParentMovementType>(movementType));
-        mMovementManager.link(mPos, movementMask, mMovementID);
+
+        if (movementType == ParentMovementType::cPos_CenterRotation) {
+            mMovementManager.linkPivotal(mPos, movementMask, mMovementID);
+        } else {
+            mMovementManager.link(mPos, movementMask, mMovementID);
+        }
+
         mMovementManager.execute();
     }
     
@@ -235,7 +241,11 @@ ActorBase::Result Peepa::create() {
     if (isMovementControlled()) {
         u8 movementType = red::SpriteUtil::getNybble5(this);
         u32 movementMask = mMovementManager.getTypeMask(static_cast<ParentMovementType>(movementType));
-        mMovementManager.link(mPos, movementMask, mMovementID);
+        if (movementType == ParentMovementType::cPos_CenterRotation) {
+            mMovementManager.linkPivotal(mPos, movementMask, mMovementID);
+        } else {
+            mMovementManager.link(mPos, movementMask, mMovementID);
+        }
         mMovementManager.execute();
     }
 

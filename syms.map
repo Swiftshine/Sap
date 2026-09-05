@@ -12,3 +12,5 @@ _ZN19LiftNormalModelDraw4drawEv = 0x027BE4FC;
 
 _ZN19ActorAdditionalHeap6createEv = 0x02002c70;
 _ZN19ActorAdditionalHeap7destroyEv = 0x02002C54;
+
+_ZN17ParentMovementMgr11linkPivotalERKN4sead7Vector3IfEEjaS4_hhhb = 0x0284b824;
