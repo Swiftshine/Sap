@@ -202,6 +202,7 @@ const ActorCreateInfo Peepa::cCreateInfo = {
 
 Peepa::Peepa(const ActorCreateParam& param)
     : Enemy(param)
+    , mPlatform(nullptr)
 { }
 
 Profile* Peepa::cProfile = sap::getRegistrar()->newProfile<Peepa>("peepa")
