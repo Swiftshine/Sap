@@ -76,22 +76,18 @@
 	<sprite string_id="sap:peepa" name="Peepa">
         <list nybble="1" title="Platform Type">
 			<entry value="0">No Platform</entry>
-            <entry value="1">Cloud</entry>
-            <entry value="2">Wood</entry>
-            <entry value="3">Wood Snow</entry>
-			<entry value="4">Ferris Wheel</entry>
-            <entry value="5">Stone</entry>
-            <entry value="6">Bolt Platform</entry>
+            <entry value="1">Wood</entry>
+            <entry value="2">Wood Snow</entry>
+			<entry value="3">Ferris Wheel</entry>
+            <entry value="4">Stone</entry>
+            <entry value="5">Bolt Platform</entry>
+            <entry value="6">Cloud</entry>
         </list>
 
-		<list nybble="2" title="Platform Length" requirednybble="1" requiredval="2-6">
-			<entry value="0"></entry>
-			<entry value="1"></entry>
-			<entry value="2"></entry>
-			<entry value="3"></entry>
-			<entry value="4"></entry>
-		</list>
-        <!-- <list nybble="X" title="Movement Type">
+		<value nybble="2" title="Platform Length" requirednybble="1" requiredval="1-5" comment="N + 2 tiles."/>
+		
+        <value nybble="3-4" title="Peepa Movement ID"/>
+        <list nybble="5" title="Peepa Movement Type" requirednybble="3-4" requiredval="1-255">
 			<entry value="0">None</entry>
 			<entry value="1">Sway Or Spin (68, 69, 116, 118)</entry>
 			<entry value="2">Bolt (238)</entry>
@@ -104,6 +100,51 @@
 			<entry value="10">Rolling Hill (265)</entry>
 			<entry value="11">Moving Mushroom Lift (210)</entry>
 		</list>
-        <value nybble="X" title="Movement ID"/> -->
+
+		<checkbox nybble="6" title="Rotate Peepa During Rotation" requirednybble="1" requiredval="0"/>
+		<checkbox nybble="6" title="Rotate Platform During Rotation" requirednybble="1" requiredval="1-6"/>
+	</sprite>
+
+	<sprite string_id="sap:generic_platform" name="Platform">
+		<list nybble="5" title="Platform Type" comment="Cloud platforms are hardcoded to be 2 tiles long.">
+            <entry value="0">Wood</entry>
+            <entry value="1">Wood Snow</entry>
+			<entry value="2">Ferris Wheel</entry>
+            <entry value="3">Stone</entry>
+            <entry value="4">Bolt Platform</entry>
+            <entry value="5">Cloud</entry>
+        </list>
+
+		<list nybble="6" title="Platform Length" comment="In tiles." requirednybble="1" requiredval="0-4">
+			<entry value="0">2</entry>
+			<entry value="1">3</entry>
+			<entry value="2">4</entry>
+			<entry value="3">5</entry>
+			<entry value="4">6</entry>
+			<entry value="5">7</entry>
+			<entry value="6">8</entry>
+			<entry value="7">9</entry>
+			<entry value="8">10</entry>
+			<entry value="9">11</entry>
+			<entry value="10">12</entry>
+			<entry value="11">13</entry>
+			<entry value="12">14</entry>
+			<entry value="13">15</entry>
+		</list>
+
+		<value nybble="7-8" title="Movement ID"/>
+		<list nybble="9" title="Movement Type" requirednybble="3-4" requiredval="1-255">
+			<entry value="0">None</entry>
+			<entry value="1">Sway Or Spin (68, 69, 116, 118)</entry>
+			<entry value="2">Bolt (238)</entry>
+			<entry value="3">Path (100)</entry>
+			<entry value="4">Two-Way (70)</entry>
+			<entry value="6">BoltMushroom (241)</entry>
+			<entry value="7">No-bolt Mushroom (242)</entry>
+			<entry value="8">Shifting Platform (132)</entry>
+			<entry value="9">Spinning (214, 484)</entry>
+			<entry value="10">Rolling Hill (265)</entry>
+			<entry value="11">Moving Mushroom Lift (210)</entry>
+		</list>
 	</sprite>
 </sprites>
