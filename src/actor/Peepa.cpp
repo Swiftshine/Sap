@@ -1,10 +1,10 @@
 // TODO: randomise wait animation frame on init
 // TODO: behaviour sans platform
-// TODO: platform rotation
 // TODO: different platform types
 // TODO: movement control
 
 #include <sap/Sap.h>
+#include <red/heap/RedCoreHeap.h>
 
 #include <actor/Profile.h>
 #include <collision/ActorBgCollisionMgr.h>
@@ -12,6 +12,10 @@
 #include <enemy/Enemy.h>
 #include <graphics/AnimModel.h>
 #include <map_obj/LiftNormalModelDraw.h>
+
+#include <imgui/imgui.h>
+
+namespace sap {
 
 class Peepa : public Enemy {
 public:
@@ -34,22 +38,32 @@ public:
         mModel->update(mPos, mAngle, MODEL_SCALE);
     }
 
+    void setHeap(sead::Heap* heap) {
+        sead::CurrentHeapSetter chs(heap);
+    }
+    
     void configurePlatformModel(LiftNormalModelDraw::ModelType modelType, u32 lengthInTiles) {
+        constexpr f32 PLATFORM_MODEL_OFFSET = 8.0f;
+
         mPlatformModel.setModelScale(1.0f);
         mPlatformModel.setLength(lengthInTiles);
-        mPlatformModel.getModelOffset() = sead::Vector3f(-(lengthInTiles * 16.0f * 0.5f), 16.0f, mPos.z - 100.0f);
+        mPlatformModel.getModelOffset() = sead::Vector3f(-(lengthInTiles * 16.0f * 0.5f), PLATFORM_MODEL_OFFSET, -100.0f);
         mPlatformModel.setModelType(modelType);
+        mPlatformModel.getAngle().z() = mPlatformAngle;
         mPlatformModel.init();
     }
 
     void updatePlatformModel() {
         const sead::Vector3f pos(mPos.x, mPos.y, mPos.z - 10000.0f);
+        mPlatformModel.getAngle().z() = mPlatformAngle;
         mPlatformModel.move(pos, getPlatformLengthInUnits());
     }
 
     f32 getPlatformLengthInUnits() {
         return mPlatformLengthInTiles * 16.0f;
     }
+
+    void debugMenu();
 private:
     // peepa model
     AnimModel* mModel;
@@ -59,6 +73,7 @@ private:
     LiftNormalModelDraw mPlatformModel;
     ActorPolylineBgCollision<1> mSemisolidCollider;
     u32 mPlatformLengthInTiles;
+    Angle mPlatformAngle;
 };
 
 const ActorCreateInfo Peepa::cCreateInfo = {
@@ -71,18 +86,20 @@ Peepa::Peepa(const ActorCreateParam& param)
 { }
 
 Profile* Peepa::cProfile = sap::getRegistrar()->newProfile<Peepa>("peepa")
-    .resources<"teren", "lift_han_wood"
-    // , "lift_han_wood", "lift_han_stone", "lift_han_spin", "lift_han_sky"
-    >(ProfileInfo::cResType_Course)
-    .createInfo(&cCreateInfo)
-    .build();
+.resources<"teren", "lift_han_wood"
+// , "lift_han_wood", "lift_han_stone", "lift_han_spin", "lift_han_sky"
+>(ProfileInfo::cResType_Course)
+.createInfo(&cCreateInfo)
+.build();
 
 ActorBase::Result Peepa::create() {
     // model setup
     mModel = AnimModel::create("teren", "teren", 3);
     mModel->playSklAnim("Wait");
 
-    mPlatformLengthInTiles = 4;
+    // todo: unhardcode this stuff
+    mPlatformLengthInTiles = 5;
+    mPlatformAngle = mAngle.z();
     configurePlatformModel(LiftNormalModelDraw::cModelType_Wood, mPlatformLengthInTiles);
     mHasPlatform = true;
 
@@ -93,8 +110,8 @@ ActorBase::Result Peepa::create() {
     };
 
     mSemisolidCollider.set(this, {
-        .pos_offset = { 0.0f, 24.0f },
-        .rot_pivot_offset = { 0.0f, 0.0f },
+        .pos_offset = { 0.0f, 16.0f },
+        .rot_pivot_offset = { 0.0f, -8.0f },
         .points = points,
     });
 
@@ -109,11 +126,13 @@ ActorBase::Result Peepa::create() {
 bool Peepa::execute() {
     if (mHasPlatform) {
         updatePlatformModel();
-        mSemisolidCollider.setAngle(mAngle.z());
+        mSemisolidCollider.setAngle(mPlatformAngle);
         mSemisolidCollider.execute();
     }
 
     updateModel();
+
+    mPlatformAngle = sead::Mathf::deg2idx(0.5f + sead::Mathf::idx2deg(mPlatformAngle));
 
     return true;
 }
@@ -128,3 +147,4 @@ bool Peepa::draw() {
     return true;
 }
 
+}
