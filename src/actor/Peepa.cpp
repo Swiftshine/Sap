@@ -225,6 +225,8 @@ ActorBase::Result Peepa::create() {
     f32 frame = sead::GlobalRandom::instance()->getF32Range(start, end);
     ctrl.setFrame(frame);
 
+    updateModel();
+    
     // platform
     u8 platformSetting = red::SpriteUtil::getNybble1(this);
     u8 platformLength = red::SpriteUtil::getNybble2(this);
