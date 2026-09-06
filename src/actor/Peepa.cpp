@@ -1,4 +1,5 @@
-// TODO: behaviour sans platform
+// TODO: fix broken collisions when rotating
+// FUTURE: make the death sequence more like existing enemies
 // NOTE: need to wait until redcore has an official symbol for `linkPivotal`
 
 #include <sap/Sap.h>
@@ -6,10 +7,14 @@
 
 #include <actor/ActorMgr.h>
 #include <actor/Profile.h>
+#include <audio/GameAudio.h>
 #include <collision/ActorBgCollisionMgr.h>
 #include <collision/ActorPolylineBgCollision.h>
+#include <effect/EffectCreateUtil.h>
 #include <enemy/Enemy.h>
 #include <graphics/AnimModel.h>
+#include <sound/SndObjectPlayer.h>
+#include <map_obj/ChibiYoshiBase.h>
 #include <map_obj/LiftNormalModelDraw.h>
 #include <map_obj/ParentMovementMgr.h>
 #include <random/seadGlobalRandom.h>
@@ -132,10 +137,13 @@ bool Platform::draw() {
 
 // ====== PEEPA ======
 
+using CC = ActorCollisionCheck;
+
 class Peepa : public Enemy {
 public:
     static Profile* cProfile;
     static const ActorCreateInfo cCreateInfo;
+    static const CC::CollisionData cCollisionData;
 
     Peepa(const ActorCreateParam& param);
     ~Peepa() override = default;
@@ -144,8 +152,8 @@ public:
     bool execute() override;
     bool draw() override;
 
-    // void vsPlayerHitCheck_Normal(ActorCollisionCheck* cc_self, ActorCollisionCheck* cc_other) override;
-    // void vsYoshiHitCheck_Normal(ActorCollisionCheck* cc_self, ActorCollisionCheck* cc_other) override;
+    bool hitCallback_Star(CC* cc_self, CC* cc_other) override;
+    bool hitCallback_ChibiYoshiStar(CC* cc_self, CC* cc_other) override;
 
     void updateModel() {
         constexpr f32 SCALE_FACTOR = 0.16f;
@@ -181,6 +189,13 @@ public:
         return mPlatformAngle;
     }
 
+    void die() {
+        GameAudio::getAudioObjEmy()->startSound("SE_EMY_TERESA_DEAD", mPos);
+        sead::Vector3f effectPos(mPos.x, mPos.y, 4500.0f);
+        EffectCreateUtil::createEffect(RP_Teresa_Disapp, &effectPos);
+        mDeleteRequestFlag = true;
+    }
+
 private:
     // peepa model
     AnimModel* mModel;
@@ -200,15 +215,29 @@ const ActorCreateInfo Peepa::cCreateInfo = {
     .offset_y = -16  
 };
 
-Peepa::Peepa(const ActorCreateParam& param)
-    : Enemy(param)
-    , mPlatform(nullptr)
-{ }
+const CC::CollisionData Peepa::cCollisionData = {
+    .center_offset = { 0.0f, 8.0f },
+    .half_size = { 8.0f, 8.0f },
+    .shape_type = CC::cShapeType_Box,
+    .kind = CC::cKind_Enemy,
+    .attack = CC::cAttack_None,
+    .vs_kind = CC::TargetKind(
+        CC::cTargetKind_Player | CC::cTargetKind_Enemy | CC::cTargetKind_Yoshi | CC::cTargetKind_ChibiYoshi
+    ),
+    .vs_damage = CC::cDamageFrom_Star,
+    .status = CC::cStatus_None,
+    .callback = &Enemy::normal_collcheck
+};
 
 Profile* Peepa::cProfile = sap::getRegistrar()->newProfile<Peepa>("peepa")
     .resources<"teren", "lift_han_wood", "lift_han_stone", "lift_han_spin", "lift_han_sky", "lift_kanransha">(ProfileInfo::cResType_Course)
     .createInfo(&cCreateInfo)
     .build();
+
+Peepa::Peepa(const ActorCreateParam& param)
+    : Enemy(param)
+    , mPlatform(nullptr)
+{ }
 
 ActorBase::Result Peepa::create() {
     // model setup
@@ -264,6 +293,13 @@ ActorBase::Result Peepa::create() {
 
     mShouldRotate = static_cast<bool>(red::SpriteUtil::getNybble6(this));
 
+    // collision
+
+    if (!hasPlatform()) {
+        mCollisionCheck.set(this, cCollisionData);
+        reviveCollisionCheck();
+    }
+
     return cResult_Success;
 }
 
@@ -315,6 +351,26 @@ bool Platform::execute() {
 
 bool Peepa::draw() {
     mModel->draw();
+    return true;
+}
+
+bool Peepa::hitCallback_Star(CC* cc_self, CC* cc_other) {
+    Actor* other = cc_other->getOwner();
+    
+    switch (other->getActorType()) {
+        case ActorType::cActorType_Player: fumiScoreSet(other); break;
+        case ActorType::cActorType_Yoshi: yoshiFumiScoreSet(other); break;
+    }
+
+    die();
+
+    return false;
+}
+
+bool Peepa::hitCallback_ChibiYoshiStar(CC* cc_self, CC* cc_other) {
+    ChibiYoshiBase* baby = static_cast<ChibiYoshiBase*>(cc_other->getOwner());
+    fumiScoreSet(baby);
+    die();
     return true;
 }
 

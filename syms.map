@@ -14,3 +14,13 @@ _ZN19ActorAdditionalHeap6createEv = 0x02002c70;
 _ZN19ActorAdditionalHeap7destroyEv = 0x02002C54;
 
 _ZN17ParentMovementMgr11linkPivotalERKN4sead7Vector3IfEEjaS4_hhhb = 0x0284b824;
+
+_ZN2nw3snd11SoundHandle11DetachSoundEv = 0x02addfac;
+_ZN11SndObjctPly18startPlyVoiceSoundE13PlayerVoiceIDN2nw3snd10OutputLineE = 0x029bf7fc;
+_ZN11SndObjctPly10startSoundEPKcN2nw3snd10OutputLineE = 0x029BF2D4;
+_ZN11NMSndObjectC2EN15NMSndObjectBase7ObjTypeEN2nw3snd10OutputLineE = 0x029bc52c;
+_ZN15NMSndObjectBaseD1Ev = 0x029bbbd8;
+_ZTV11NMSndObject = 0x1017dd7c;
+_ZTV11SndObjctPly = 0x10161c44;
+
+_ZNK14ChibiYoshiBase24getCarryingPlayerOrYoshiEv = 0x027344cc;
