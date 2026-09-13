@@ -147,4 +147,23 @@
 			<entry value="11">Moving Mushroom Lift (210)</entry>
 		</list>
 	</sprite>
+
+	<sprite string_id="sap:flipswitch_block" name="Flipswitch Block" comment="This will not spawn if there is no manager associated with it.">
+		<list nybble="1" title="Length">
+			<entry value="0">1 Block</entry>
+			<entry value="1">2 Blocks</entry>
+			<entry value="2">3 Blocks</entry>
+		</list>
+
+		<value nybble="2-3" title="Manager ID"/>
+	</sprite>
+
+	<sprite string_id="sap:flipswitch_manager" name="Flipswitch Manager">
+		<value nybble="1-2" title="Manager ID"/>
+		<value nybble="3-4" title="Target Event ID"/>
+		<list nybble="5" title="Behavior">
+			<entry value="0">Activate Event</entry>
+			<entry value="1">Deactivate Event</entry>
+		</list>
+	</sprite>
 </sprites>

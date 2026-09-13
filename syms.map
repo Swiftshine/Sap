@@ -2,16 +2,24 @@
 
 // If your mod uses symbols that aren't in RedCore, you can add them here.
 
-_ZN12PlayerObject16setItemGetEffectEv = 0x0293A388;
-_ZN9EffectObj6followEPKN4sead7Vector3IfEEPK6Angle3S4_ = 0x022ab448;
+// ActorAdditionalHeap
+_ZN19ActorAdditionalHeap6createEv = 0x02002c70;
+_ZN19ActorAdditionalHeap7destroyEv = 0x02002C54;
 
+// ActorBgCollision
+_ZN19ActorBgCollisionMgr7releaseERK11BgCollision = 0x0219282C;
 
+// ActorBlockBase
+_ZN14ActorBlockBase15StateID_HitWaitE = 0x1021E904;
+
+// LiftNormalModelDraw
 _ZN19LiftNormalModelDraw4initEv = 0x027BE110;
 _ZN19LiftNormalModelDraw4moveERKN4sead7Vector3IfEEf = 0x027BE428;
 _ZN19LiftNormalModelDraw4drawEv = 0x027BE4FC;
 
-_ZN19ActorAdditionalHeap6createEv = 0x02002c70;
-_ZN19ActorAdditionalHeap7destroyEv = 0x02002C54;
+
+_ZN12PlayerObject16setItemGetEffectEv = 0x0293A388;
+_ZN9EffectObj6followEPKN4sead7Vector3IfEEPK6Angle3S4_ = 0x022ab448;
 
 _ZN17ParentMovementMgr11linkPivotalERKN4sead7Vector3IfEEjaS4_hhhb = 0x0284b824;
 
@@ -24,3 +32,4 @@ _ZTV11NMSndObject = 0x1017dd7c;
 _ZTV11SndObjctPly = 0x10161c44;
 
 _ZNK14ChibiYoshiBase24getCarryingPlayerOrYoshiEv = 0x027344cc;
+
