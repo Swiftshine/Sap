@@ -5,3 +5,6 @@
 - Modified checkpoint
 - Peepa
 - Flipswitch Block
+
+## Resource Credits
+- rodmjorgeh (Flipswitch Block)
