@@ -3,7 +3,7 @@
     
     Name: "SwiftActorPack",
     Type: "Standard",
-    Version: "1.0.0",
+    Version: "0.1.0",
     Description: "Misc. actors by Swiftshine",
     
     SourceDirs: [
