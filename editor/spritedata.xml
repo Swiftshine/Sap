@@ -28,7 +28,7 @@
 			<entry value="11">Moving Mushroom Lift (210)</entry>
 		</list>
 
-		<checkbox nybble="6" title="Rotate Peepa During Rotation" requirednybble="1" requiredval="0"/>
+		<!-- <checkbox nybble="6" title="Rotate Peepa During Rotation" requirednybble="1" requiredval="0"/> -->
 		<checkbox nybble="6" title="Rotate Platform During Rotation" requirednybble="1" requiredval="1-6"/>
 	</sprite>
 

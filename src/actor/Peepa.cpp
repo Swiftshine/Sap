@@ -291,8 +291,10 @@ ActorBase::Result Peepa::create() {
         mMovementManager.execute();
     }
 
-    mShouldRotate = static_cast<bool>(red::SpriteUtil::getNybble6(this));
-
+    // comment-out later when i fix it
+    // mShouldRotate = static_cast<bool>(red::SpriteUtil::getNybble6(this));
+    mShouldRotate = false;
+    
     // collision
 
     if (!hasPlatform()) {
