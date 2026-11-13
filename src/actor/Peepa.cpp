@@ -34,7 +34,7 @@ const LiftNormalModelDraw::ModelType PLATFORM_MODEL_TYPES[6] = {
 // ===== PLATFORM =====
 class Platform : public Actor {
 public:
-    static Profile* cProfile;
+    static Profile* sProfile;
     static const ActorCreateInfo cCreateInfo;
 
     Platform(const ActorCreateParam& param);
@@ -64,7 +64,7 @@ const ActorCreateInfo Platform::cCreateInfo = {
     .offset_y = -8
 };
 
-Profile* Platform::cProfile = sap::getRegistrar()->newProfile<Platform>("generic_platform")
+Profile* Platform::sProfile = sap::getRegistrar()->newProfile<Platform>("generic_platform")
     .resources<"lift_han_wood", "lift_han_stone", "lift_han_spin", "lift_han_sky", "lift_kanransha">(ProfileInfo::cResType_Course)
     .createInfo(&Platform::cCreateInfo)
     .build();
@@ -141,7 +141,7 @@ using CC = ActorCollisionCheck;
 
 class Peepa : public Enemy {
 public:
-    static Profile* cProfile;
+    static Profile* sProfile;
     static const ActorCreateInfo cCreateInfo;
     static const CC::CollisionData cCollisionData;
 
@@ -229,7 +229,7 @@ const CC::CollisionData Peepa::cCollisionData = {
     .callback = &Enemy::normal_collcheck
 };
 
-Profile* Peepa::cProfile = sap::getRegistrar()->newProfile<Peepa>("peepa")
+Profile* Peepa::sProfile = sap::getRegistrar()->newProfile<Peepa>("peepa")
     .resources<"teren", "lift_han_wood", "lift_han_stone", "lift_han_spin", "lift_han_sky", "lift_kanransha">(ProfileInfo::cResType_Course)
     .createInfo(&cCreateInfo)
     .build();
@@ -262,7 +262,7 @@ ActorBase::Result Peepa::create() {
     
     if (platformSetting != 0) {
         ActorCreateParam param;
-        param.profile = Platform::cProfile;
+        param.profile = Platform::sProfile;
         param.parent_id = mActorUniqueID;
 
         // nybble 5

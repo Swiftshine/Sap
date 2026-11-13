@@ -16,7 +16,7 @@ namespace sap {
 class FlipswitchManager : public Actor {
     SEAD_RTTI_OVERRIDE(FlipswitchManager, Actor);
 public:
-    static Profile* cProfile;
+    static Profile* sProfile;
     static const ActorCreateInfo cCreateInfo;
 
     FlipswitchManager(const ActorCreateParam& param);
@@ -58,7 +58,7 @@ const ActorCreateInfo FlipswitchManager::cCreateInfo = {
     .flag = ActorCreateInfo::cFlag_IgnoreSpawnRange
 };
 
-Profile* FlipswitchManager::cProfile = sap::getRegistrar()->newProfile<FlipswitchManager>("flipswitch_manager")
+Profile* FlipswitchManager::sProfile = sap::getRegistrar()->newProfile<FlipswitchManager>("flipswitch_manager")
     .createInfo(&FlipswitchManager::cCreateInfo)
     .build();
 
@@ -102,7 +102,7 @@ public:
         ActorMgr* actors = ActorMgr::instance();
         for (ActorMgr::iterator it = actors->getActorBegin(); it != actors->getActorEnd(); it++) {
             Actor* actor = static_cast<Actor*>(*it);
-            if (actor == nullptr || actor->getProfile() != FlipswitchManager::cProfile) {
+            if (actor == nullptr || actor->getProfile() != FlipswitchManager::sProfile) {
                 continue;
             }
 
@@ -146,7 +146,7 @@ public:
         Completed
     };
 
-    static Profile* cProfile;
+    static Profile* sProfile;
     static const ActorCreateInfo cCreateInfo;
 
     FlipswitchBlock(const ActorCreateParam& param);
@@ -211,7 +211,7 @@ const ActorCreateInfo FlipswitchBlock::cCreateInfo = {
     .flag = ActorCreateInfo::cFlag_MapObj
 };
 
-Profile* FlipswitchBlock::cProfile = sap::getRegistrar()->newProfile<FlipswitchBlock>("flipswitch_block")
+Profile* FlipswitchBlock::sProfile = sap::getRegistrar()->newProfile<FlipswitchBlock>("flipswitch_block")
     .resources<"block_flipstch">(ProfileInfo::cResType_Course)
     .createInfo(&FlipswitchBlock::cCreateInfo)
     .build();
