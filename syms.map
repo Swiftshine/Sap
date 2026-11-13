@@ -17,11 +17,11 @@ _ZN19LiftNormalModelDraw4initEv = 0x027BE110;
 _ZN19LiftNormalModelDraw4moveERKN4sead7Vector3IfEEf = 0x027BE428;
 _ZN19LiftNormalModelDraw4drawEv = 0x027BE4FC;
 
+// ParentMovementMgr
+    _ZN17ParentMovementMgr11linkPivotalERKN4sead7Vector3IfEEjaS4_bbbb = 0x0284B824;
 
 _ZN12PlayerObject16setItemGetEffectEv = 0x0293A388;
 _ZN9EffectObj6followEPKN4sead7Vector3IfEEPK6Angle3S4_ = 0x022ab448;
-
-_ZN17ParentMovementMgr11linkPivotalERKN4sead7Vector3IfEEjaS4_hhhb = 0x0284b824;
 
 _ZN2nw3snd11SoundHandle11DetachSoundEv = 0x02addfac;
 _ZN11SndObjctPly18startPlyVoiceSoundE13PlayerVoiceIDN2nw3snd10OutputLineE = 0x029bf7fc;

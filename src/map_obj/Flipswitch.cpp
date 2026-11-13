@@ -1,6 +1,3 @@
-// TODO: handle variable length (1-3 blocks)
-// TODO: add single block flipswitch block model
-// TODO: fix flipswitch block shading
 // TODO: add flipswitch *panel*
 
 #include <sap/Sap.h>
@@ -17,6 +14,7 @@ namespace sap {
 
 // ===== FLIPSWITCH MANAGER =====
 class FlipswitchManager : public Actor {
+    SEAD_RTTI_OVERRIDE(FlipswitchManager, Actor);
 public:
     static Profile* cProfile;
     static const ActorCreateInfo cCreateInfo;
@@ -54,6 +52,7 @@ private:
     bool mShouldActivateEvent;
 };
 
+SEAD_RTTI_OVERRIDE_IMPL(FlipswitchManager, Actor);
 
 const ActorCreateInfo FlipswitchManager::cCreateInfo = {
     .flag = ActorCreateInfo::cFlag_IgnoreSpawnRange
@@ -133,6 +132,7 @@ protected:
 
 // ===== FLIPSWITCH BLOCK =====
 class FlipswitchBlock : public ActorBlockBase, public FlipswitchBase {
+    SEAD_RTTI_OVERRIDE(FlipswitchBlock, ActorBlockBase);
 public:
     enum Length : u32 {
         One,
@@ -203,6 +203,8 @@ private:
     Length mLength;
 };
 
+SEAD_RTTI_OVERRIDE_IMPL(FlipswitchBlock, ActorBlockBase);
+
 const ActorCreateInfo FlipswitchBlock::cCreateInfo = {
     .offset_x = 8,
     .offset_y = -8,
@@ -242,9 +244,9 @@ ActorBase::Result FlipswitchBlock::create() {
     f32 dist;
 
     switch (mLength) {
-        case One: dist = 8.0f; break;
-        case Two: dist = 16.0f; break;
-        case Three: dist = 32.0f; break;
+        case One: dist = 0.0f; break;
+        case Two: dist = 8.0f; break;
+        case Three: dist = 16.0f; break;
     };
 
     points[0].x -= dist;
@@ -259,8 +261,26 @@ ActorBase::Result FlipswitchBlock::create() {
 
     // model
     mScale = sead::Vector3f(1.0f, 1.0f, 1.0f);
-    mModel = AnimModel::create("block_flipstch", "block_flipstch", 0, 2);
-    mModel->playTexAnim("flip_two_wide");
+
+    switch (mLength) {
+        case One: {
+            mModel = AnimModel::create("block_flipstch", "block_flipswitch_1", 0, 3);
+            mModel->playTexAnim("block_flipswitch_1");
+            break;
+        }
+        
+        case Two: {
+            mModel = AnimModel::create("block_flipstch", "block_flipswitch_2", 0, 3);
+            mModel->playTexAnim("block_flipswitch_2");
+            break;
+        }
+        
+        case Three: {
+            mModel = AnimModel::create("block_flipstch", "block_flipswitch_3", 0, 3);
+            mModel->playTexAnim("block_flipswitch_3");
+            break;
+        }
+    }
 
     FrameCtrl& frameCtrl = mModel->getTexAnim(0)->getFrameCtrl();
 
